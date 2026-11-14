@@ -1,0 +1,583 @@
+/* General styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f6f7fb;
+  color: #252936;
+  line-height: 1.6;
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  min-height: 100vh;
+  background-color: #e0e0e0;
+}
+
+aside {
+  padding: 28px;
+  background: #171c2c;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-right: 1px solid #0a0e1a;
+}
+
+aside h1 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #7056e8;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+aside p {
+  margin: 0;
+  font-size: 1.1em;
+  text-align: center;
+}
+
+.game-setup,
+.game-info {
+  background-color: #2a3142;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  text-align: center;
+}
+
+.game-setup label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 1.1em;
+}
+
+.game-setup select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #444;
+  background-color: #3a4153;
+  color: white;
+  margin-bottom: 15px;
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-6.5%200-12.3%203.4-15.5%208.9-3.2%205.5-3.2%2012.3%200%2017.8l131.2%20131.4c3.2%205.5%208.9%208.9%2015.5%208.9s12.3-3.4%2015.5-8.9L287%2087.2c3.2-5.5%203.2-12.3%200-17.8z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right 10px top 50%;
+  background-size: 12px;
+}
+
+button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #7056e8;
+  color: white;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+button:hover {
+  background-color: #5a42d0;
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button:disabled {
+  background-color: #4a5061;
+  cursor: not-allowed;
+}
+
+.game-info h2 {
+  margin-top: 0;
+  font-size: 1.8em;
+  color: #fff;
+}
+
+.game-info .game-message {
+  min-height: 40px;
+  font-style: italic;
+  color: #b0b0b0;
+}
+
+.new-game-button {
+  margin-top: 20px;
+  background-color: #e85656;
+}
+
+.new-game-button:hover {
+  background-color: #d04242;
+}
+
+main {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f2f5;
+}
+
+main h2 {
+  font-size: 2.5em;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.welcome-screen {
+  text-align: center;
+  max-width: 600px;
+  padding: 30px;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.welcome-screen p {
+  font-size: 1.2em;
+  color: #555;
+}
+
+.welcome-screen ul {
+  text-align: left;
+  margin-top: 20px;
+  list-style: disc inside;
+  color: #666;
+}
+
+.welcome-screen li {
+  margin-bottom: 8px;
+}
+
+/* Ludo Board styles */
+.ludo-board-container {
+  width: 650px; /* 15 cells * 40px/cell + padding */
+  height: 650px;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  padding: 20px;
+  position: relative;
+}
+
+.ludo-board {
+  display: grid;
+  grid-template-columns: repeat(15, 1fr);
+  grid-template-rows: repeat(15, 1fr);
+  width: 100%;
+  height: 100%;
+  border: 2px solid #333;
+  position: relative;
+  background-color: #eee; /* Background for the board areas */
+}
+
+.ludo-square {
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.7em;
+  position: relative;
+  background-color: #f9f9f9;
+  z-index: 1;
+}
+
+.ludo-board > div {
+  /* Default grid area names */
+  /* Main Path Squares */
+  grid-area: path_1; /* Red Start */
+  &:nth-child(2) { grid-area: path_2; }
+  &:nth-child(3) { grid-area: path_3; }
+  &:nth-child(4) { grid-area: path_4; }
+  &:nth-child(5) { grid-area: path_5; }
+  &:nth-child(6) { grid-area: path_6; }
+  &:nth-child(7) { grid-area: path_7; }
+  &:nth-child(8) { grid-area: path_8; }
+  &:nth-child(9) { grid-area: path_9; }
+  &:nth-child(10) { grid-area: path_10; }
+  &:nth-child(11) { grid-area: path_11; }
+  &:nth-child(12) { grid-area: path_12; }
+  &:nth-child(13) { grid-area: path_13; } /* Blue Home Entry */
+  &:nth-child(14) { grid-area: path_14; } /* Blue Start */
+  &:nth-child(15) { grid-area: path_15; }
+  &:nth-child(16) { grid-area: path_16; }
+  &:nth-child(17) { grid-area: path_17; }
+  &:nth-child(18) { grid-area: path_18; }
+  &:nth-child(19) { grid-area: path_19; }
+  &:nth-child(20) { grid-area: path_20; }
+  &:nth-child(21) { grid-area: path_21; }
+  &:nth-child(22) { grid-area: path_22; }
+  &:nth-child(23) { grid-area: path_23; }
+  &:nth-child(24) { grid-area: path_24; }
+  &:nth-child(25) { grid-area: path_25; }
+  &:nth-child(26) { grid-area: path_26; } /* Yellow Home Entry */
+  &:nth-child(27) { grid-area: path_27; } /* Yellow Start */
+  &:nth-child(28) { grid-area: path_28; }
+  &:nth-child(29) { grid-area: path_29; }
+  &:nth-child(30) { grid-area: path_30; }
+  &:nth-child(31) { grid-area: path_31; }
+  &:nth-child(32) { grid-area: path_32; }
+  &:nth-child(33) { grid-area: path_33; }
+  &:nth-child(34) { grid-area: path_34; }
+  &:nth-child(35) { grid-area: path_35; }
+  &:nth-child(36) { grid-area: path_36; }
+  &:nth-child(37) { grid-area: path_37; }
+  &:nth-child(38) { grid-area: path_38; }
+  &:nth-child(39) { grid-area: path_39; } /* Green Home Entry */
+  &:nth-child(40) { grid-area: path_40; } /* Green Start */
+  &:nth-child(41) { grid-area: path_41; }
+  &:nth-child(42) { grid-area: path_42; }
+  &:nth-child(43) { grid-area: path_43; }
+  &:nth-child(44) { grid-area: path_44; }
+  &:nth-child(45) { grid-area: path_45; }
+  &:nth-child(46) { grid-area: path_46; }
+  &:nth-child(47) { grid-area: path_47; }
+  &:nth-child(48) { grid-area: path_48; }
+  &:nth-child(49) { grid-area: path_49; }
+  &:nth-child(50) { grid-area: path_50; }
+  &:nth-child(51) { grid-area: path_51; } /* Red Home Entry */
+  &:nth-child(52) { grid-area: path_52; }
+  /* Home Path Squares */
+  &:nth-child(53) { grid-area: home_red_1; }
+  &:nth-child(54) { grid-area: home_red_2; }
+  &:nth-child(55) { grid-area: home_red_3; }
+  &:nth-child(56) { grid-area: home_red_4; }
+  &:nth-child(57) { grid-area: home_red_5; }
+
+  &:nth-child(58) { grid-area: home_blue_1; }
+  &:nth-child(59) { grid-area: home_blue_2; }
+  &:nth-child(60) { grid-area: home_blue_3; }
+  &:nth-child(61) { grid-area: home_blue_4; }
+  &:nth-child(62) { grid-area: home_blue_5; }
+
+  &:nth-child(63) { grid-area: home_yellow_1; }
+  &:nth-child(64) { grid-area: home_yellow_2; }
+  &:nth-child(65) { grid-area: home_yellow_3; }
+  &:nth-child(66) { grid-area: home_yellow_4; }
+  &:nth-child(67) { grid-area: home_yellow_5; }
+
+  &:nth-child(68) { grid-area: home_green_1; }
+  &:nth-child(69) { grid-area: home_green_2; }
+  &:nth-child(70) { grid-area: home_green_3; }
+  &:nth-child(71) { grid-area: home_green_4; }
+  &:nth-child(72) { grid-area: home_green_5; }
+
+  /* Finish Squares */
+  &:nth-child(73) { grid-area: finish_red; }
+  &:nth-child(74) { grid-area: finish_blue; }
+  &:nth-child(75) { grid-area: finish_yellow; }
+  &:nth-child(76) { grid-area: finish_green; }
+}
+
+/* Define specific grid areas for each square */
+.ludo-board {
+  grid-template-areas:
+    "base_red base_red base_red . . path_1 path_2 path_3 . . base_blue base_blue base_blue"
+    "base_red base_red base_red . . path_52 path_51 path_4 . . base_blue base_blue base_blue"
+    "base_red base_red base_red . . path_50 path_home_red_1 path_5 . . base_blue base_blue base_blue"
+    ". . . . . path_49 path_home_red_2 path_6 . . . . ."
+    ". . . . . path_48 path_home_red_3 path_7 . . . . ."
+    "path_43 path_44 path_45 path_46 path_47 path_48 path_home_red_4 path_8 path_9 path_10 path_11 path_12 path_13 path_14 path_15"
+    "path_42 path_home_green_5 path_home_green_4 path_home_green_3 path_home_green_2 path_home_green_1 finish_center path_home_blue_1 path_home_blue_2 path_home_blue_3 path_home_blue_4 path_home_blue_5 path_16"
+    "path_41 path_40 path_39 path_38 path_37 path_36 path_35 path_21 path_20 path_19 path_18 path_17"
+    ". . . . . path_34 path_home_yellow_4 path_22 . . . . ."
+    ". . . . . path_33 path_home_yellow_3 path_23 . . . . ."
+    "base_green base_green base_green . . path_32 path_home_yellow_2 path_24 . . base_yellow base_yellow base_yellow"
+    "base_green base_green base_green . . path_31 path_home_yellow_1 path_25 . . base_yellow base_yellow base_yellow"
+    "base_green base_green base_green . . path_30 path_29 path_28 . . base_yellow base_yellow base_yellow";
+}
+
+/* Manually assign specific grid areas based on Ludo layout */
+.ludo-board #path_1 { grid-area: 1/7; background-color: lightcoral; } /* Red start */
+.ludo-board #path_2 { grid-area: 1/8; }
+.ludo-board #path_3 { grid-area: 1/9; }
+.ludo-board #path_4 { grid-area: 2/9; }
+.ludo-board #path_5 { grid-area: 3/9; }
+.ludo-board #path_6 { grid-area: 4/9; }
+.ludo-board #path_7 { grid-area: 5/9; }
+.ludo-board #path_8 { grid-area: 6/9; }
+.ludo-board #path_9 { grid-area: 6/10; } /* Safe */
+.ludo-board #path_10 { grid-area: 6/11; }
+.ludo-board #path_11 { grid-area: 6/12; }
+.ludo-board #path_12 { grid-area: 6/13; }
+.ludo-board #path_13 { grid-area: 6/14; background-color: lightblue; } /* Blue home entry */
+.ludo-board #path_14 { grid-area: 7/14; background-color: lightblue; } /* Blue start */
+.ludo-board #path_15 { grid-area: 8/14; }
+.ludo-board #path_16 { grid-area: 9/14; }
+.ludo-board #path_17 { grid-area: 10/14; }
+.ludo-board #path_18 { grid-area: 11/14; }
+.ludo-board #path_19 { grid-area: 12/14; }
+.ludo-board #path_20 { grid-area: 13/14; }
+.ludo-board #path_21 { grid-area: 14/14; }
+.ludo-board #path_22 { grid-area: 14/13; } /* Safe */
+.ludo-board #path_23 { grid-area: 14/12; }
+.ludo-board #path_24 { grid-area: 14/11; }
+.ludo-board #path_25 { grid-area: 14/10; }
+.ludo-board #path_26 { grid-area: 14/9; background-color: lightyellow; } /* Yellow home entry */
+.ludo-board #path_27 { grid-area: 13/9; background-color: lightyellow; } /* Yellow start */
+.ludo-board #path_28 { grid-area: 12/9; }
+.ludo-board #path_29 { grid-area: 11/9; }
+.ludo-board #path_30 { grid-area: 10/9; }
+.ludo-board #path_31 { grid-area: 9/9; }
+.ludo-board #path_32 { grid-area: 8/9; }
+.ludo-board #path_33 { grid-area: 7/9; }
+.ludo-board #path_34 { grid-area: 6/9; }
+.ludo-board #path_35 { grid-area: 6/8; } /* Safe */
+.ludo-board #path_36 { grid-area: 6/7; }
+.ludo-board #path_37 { grid-area: 6/6; }
+.ludo-board #path_38 { grid-area: 6/5; }
+.ludo-board #path_39 { grid-area: 6/4; background-color: lightgreen; } /* Green home entry */
+.ludo-board #path_40 { grid-area: 7/4; background-color: lightgreen; } /* Green start */
+.ludo-board #path_41 { grid-area: 8/4; }
+.ludo-board #path_42 { grid-area: 9/4; }
+.ludo-board #path_43 { grid-area: 10/4; }
+.ludo-board #path_44 { grid-area: 11/4; }
+.ludo-board #path_45 { grid-area: 12/4; }
+.ludo-board #path_46 { grid-area: 13/4; }
+.ludo-board #path_47 { grid-area: 14/4; }
+.ludo-board #path_48 { grid-area: 14/3; } /* Safe */
+.ludo-board #path_49 { grid-area: 14/2; }
+.ludo-board #path_50 { grid-area: 14/1; }
+.ludo-board #path_51 { grid-area: 13/1; background-color: lightcoral; } /* Red home entry */
+.ludo-board #path_52 { grid-area: 12/1; }
+
+/* Home Paths */
+.ludo-board #home_red_1 { grid-area: 2/7; background-color: lightcoral; }
+.ludo-board #home_red_2 { grid-area: 3/7; background-color: lightcoral; }
+.ludo-board #home_red_3 { grid-area: 4/7; background-color: lightcoral; }
+.ludo-board #home_red_4 { grid-area: 5/7; background-color: lightcoral; }
+.ludo-board #home_red_5 { grid-area: 6/7; background-color: lightcoral; }
+
+.ludo-board #home_blue_1 { grid-area: 7/13; background-color: lightblue; }
+.ludo-board #home_blue_2 { grid-area: 7/12; background-color: lightblue; }
+.ludo-board #home_blue_3 { grid-area: 7/11; background-color: lightblue; }
+.ludo-board #home_blue_4 { grid-area: 7/10; background-color: lightblue; }
+.ludo-board #home_blue_5 { grid-area: 7/9; background-color: lightblue; }
+
+.ludo-board #home_yellow_1 { grid-area: 13/7; background-color: lightyellow; }
+.ludo-board #home_yellow_2 { grid-area: 12/7; background-color: lightyellow; }
+.ludo-board #home_yellow_3 { grid-area: 11/7; background-color: lightyellow; }
+.ludo-board #home_yellow_4 { grid-area: 10/7; background-color: lightyellow; }
+.ludo-board #home_yellow_5 { grid-area: 9/7; background-color: lightyellow; }
+
+.ludo-board #home_green_1 { grid-area: 7/3; background-color: lightgreen; }
+.ludo-board #home_green_2 { grid-area: 7/4; background-color: lightgreen; }
+.ludo-board #home_green_3 { grid-area: 7/5; background-color: lightgreen; }
+.ludo-board #home_green_4 { grid-area: 7/6; background-color: lightgreen; }
+.ludo-board #home_green_5 { grid-area: 7/7; background-color: lightgreen; }
+
+/* Finish positions (center square) */
+.ludo-board #finish_red { grid-area: 7/7; background-color: #f88; border: 2px solid red; z-index: 0; }
+.ludo-board #finish_blue { grid-area: 7/7; background-color: #88f; border: 2px solid blue; z-index: 0; }
+.ludo-board #finish_yellow { grid-area: 7/7; background-color: #ff8; border: 2px solid yellow; z-index: 0; }
+.ludo-board #finish_green { grid-area: 7/7; background-color: #8f8; border: 2px solid green; z-index: 0; }
+
+/* Player Base Areas - These are not squares in the main grid but regions */
+.ludo-board #base_red_area { grid-area: 1/1 / span 6 / span 6; background-color: #ffe6e6; border-right: 2px solid #ccc; border-bottom: 2px solid #ccc; }
+.ludo-board #base_blue_area { grid-area: 1/10 / span 6 / span 6; background-color: #e6e6ff; border-left: 2px solid #ccc; border-bottom: 2px solid #ccc; }
+.ludo-board #base_yellow_area { grid-area: 10/10 / span 6 / span 6; background-color: #ffffcc; border-left: 2px solid #ccc; border-top: 2px solid #ccc; }
+.ludo-board #base_green_area { grid-area: 10/1 / span 6 / span 6; background-color: #e6ffe6; border-right: 2px solid #ccc; border-top: 2px solid #ccc; }
+
+/* The center area where finish squares are technically layered */
+.ludo-board .finish-center {
+  grid-area: 7/8 / span 2 / span 2;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #555;
+  z-index: 0;
+  border: none; /* No border for the center */
+}
+
+.ludo-board .ludo-square {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.ludo-board .ludo-square:hover {
+  background-color: #eef;
+}
+
+.start-square {
+  background-color: #ffd700; /* Gold color for start */
+}
+
+.safe-square {
+  background-color: #a0d8f0; /* Light blue for safe spots */
+  border: 2px dashed #666;
+}
+
+.home-entry-square {
+  font-weight: bold;
+}
+
+.square-red { background-color: #ffcccc; }
+.square-blue { background-color: #cceeff; }
+.square-yellow { background-color: #ffffcc; }
+.square-green { background-color: #ccffcc; }
+
+.player-token {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid #333;
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+  cursor: pointer;
+  transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
+  z-index: 10;
+  position: absolute; /* Position tokens within squares/bases */
+}
+
+/* Base Token Styling - Tokens within their base area */
+.base-token-area {
+  position: absolute;
+  width: 60px; /* Adjust as needed */
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5; /* Ensure base tokens are clickable */
+}
+
+.token-red { background-color: red; border-color: darkred; }
+.token-blue { background-color: blue; border-color: darkblue; }
+.token-yellow { background-color: yellow; border-color: goldenrod; }
+.token-green { background-color: green; border-color: darkgreen; }
+
+.player-token.highlighted {
+  transform: scale(1.2);
+  box-shadow: 0 0 10px 3px rgba(255, 255, 0, 0.7);
+  z-index: 11;
+}
+
+.highlighted-target {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(112, 86, 232, 0.4); /* Purple highlight */
+  border: 2px dashed #7056e8;
+  border-radius: 5px;
+  pointer-events: none;
+}
+
+/* Dice styles */
+.dice-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.dice {
+  width: 60px;
+  height: 60px;
+  border: 4px solid #fff;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5em;
+  font-weight: bold;
+  color: #fff;
+  background-color: #4a4a4a;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+  user-select: none;
+}
+
+.dice-0 { background-color: #555; }
+.dice-1 { background-color: #ff6347; }
+.dice-2 { background-color: #4682b4; }
+.dice-3 { background-color: #3cb371; }
+.dice-4 { background-color: #ffd700; }
+.dice-5 { background-color: #9370db; }
+.dice-6 { background-color: #dc143c; }
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .shell {
+    grid-template-columns: 220px 1fr;
+  }
+  aside {
+    padding: 20px;
+  }
+  aside h1 {
+    font-size: 24px;
+  }
+  .ludo-board-container {
+    width: 550px;
+    height: 550px;
+    padding: 15px;
+  }
+  .ludo-square {
+    font-size: 0.6em;
+  }
+  .player-token {
+    width: 25px;
+    height: 25px;
+  }
+  .dice {
+    width: 50px;
+    height: 50px;
+    font-size: 2em;
+  }
+  button {
+    padding: 10px;
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 768px) {
+  .shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+  aside {
+    padding: 15px;
+    border-right: none;
+    border-bottom: 1px solid #0a0e1a;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  aside h1 {
+    font-size: 20px;
+    margin-bottom: 0;
+    margin-right: 20px;
+  }
+  .game-setup, .game-info {
+    flex-basis: 100%;
+    margin-top: 15px;
+  }
+  .ludo-board-container {
+    width: 90vw;
+    height: 90vw;
+    max-width: 500px;
+    max-height: 500px;
+    padding: 10px;
+  }
+  main {
+    padding: 15px;
+  }
+  main h2 {
+    font-size: 2em;
+  }
+  .welcome-screen {
+    padding: 20px;
+  }
+}

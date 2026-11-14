@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "product": {
+    "name": "Ludo game",
+    "summary": "Ludo game"
+  },
+  "frontend": {
+    "framework": "React and Vite",
+    "pages": [
+      "Dashboard",
+      "Items"
+    ],
+    "apiOperations": [
+      "listItems",
+      "createItem"
+    ]
+  },
+  "application": {
+    "backendRequired": false
+  },
+  "backend": {
+    "runtime": "Node.js and Express",
+    "routes": [
+      {
+        "method": "GET",
+        "path": "/api/items"
+      },
+      {
+        "method": "POST",
+        "path": "/api/items"
+      }
+    ],
+    "resources": [
+      {
+        "singular": "item",
+        "plural": "items"
+      }
+    ]
+  },
+  "database": {
+    "engine": "PostgreSQL",
+    "resources": [
+      "items"
+    ]
+  },
+  "environments": [
+    "Development",
+    "Test",
+    "Production"
+  ],
+  "source": {
+    "discussion": "Create Basic ludo offline game website without backend.",
+    "plan": "Develop a basic, offline Ludo game accessible via a web browser, focusing on core gameplay mechanics for local multi-player interaction.",
+    "sketchName": null
+  }
+}
