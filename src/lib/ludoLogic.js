@@ -92,7 +92,7 @@ export function createInitialGameState(playerCount) {
     diceRoll: 0,
     message: 'Roll the dice to start!',
     gamePhase: 'rollingDice',
-    gameStarted: false
+    gameStarted: true
   };
 }
 
