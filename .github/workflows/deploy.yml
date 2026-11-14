@@ -1,0 +1,64 @@
+name: Deploy
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: string
+        description: Execution AI environment name
+        required: true
+      provider:
+        type: choice
+        options: [github, aws]
+        required: true
+      aws_region:
+        type: string
+      aws_role_arn:
+        type: string
+permissions:
+  contents: read
+  id-token: write
+  pages: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.provider == 'github' && 'github-pages' || inputs.environment }}
+      url: ${{ inputs.provider == 'github' && steps.pages.outputs.page_url || '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        if: ${{ inputs.provider == 'github' }}
+        with:
+          node-version: 22
+      - name: Build frontend preview
+        if: ${{ inputs.provider == 'github' }}
+        run: |
+          npm install --no-audit --no-fund
+          npm run build -- --base "/${{ github.event.repository.name }}/"
+      - name: Configure GitHub Pages
+        if: ${{ inputs.provider == 'github' }}
+        uses: actions/configure-pages@v5
+      - name: Upload GitHub Pages artifact
+        if: ${{ inputs.provider == 'github' }}
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - name: Publish frontend preview
+        id: pages
+        if: ${{ inputs.provider == 'github' }}
+        uses: actions/deploy-pages@v4
+      - name: Authenticate to AWS with OIDC
+        if: ${{ inputs.provider == 'aws' }}
+        uses: aws-actions/configure-aws-credentials@v6.3.0
+        with:
+          role-to-assume: ${{ inputs.aws_role_arn }}
+          aws-region: ${{ inputs.aws_region }}
+      - run: echo "Deploying to ${{ inputs.environment }}"
+      - name: Run repository deployment adapter
+        if: ${{ inputs.provider != 'github' }}
+        run: |
+          if [ -x scripts/deploy.sh ]; then
+            scripts/deploy.sh "${{ inputs.provider }}" "${{ inputs.environment }}"
+          else
+            echo "Add scripts/deploy.sh to deploy this repository"
+          fi
